@@ -61,7 +61,7 @@ server.on('request', (req, res) => {
 
         res.statusCode = 500;
         res.end('Internal Server Error');
-        file.destroy();
+        // file.destroy();
       });
 
       req.on('error', () => {
