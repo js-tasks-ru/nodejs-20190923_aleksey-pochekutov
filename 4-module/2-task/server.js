@@ -37,7 +37,6 @@ server.on('request', (req, res) => {
         try {
           fs.unlinkSync(filepath);
         } catch (err) {
-          console.log(err);
         }
         res.statusCode = 413;
         res.end('Request Entity Too Larg');
