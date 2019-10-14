@@ -33,7 +33,7 @@ server.on('request', (req, res) => {
       const file = fs.createWriteStream(filepath);
 
       limitStream.on('error', (err) => {
-        file.destroy();
+        // file.destroy();
         try {
           fs.unlinkSync(filepath);
         } catch (err) {
