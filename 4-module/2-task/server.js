@@ -53,10 +53,12 @@ server.on('request', (req, res) => {
       });
 
       req.on('close', (err) => {
-        try {
-          fs.unlinkSync(filepath);
-        } catch (err) {
+        if (!res.finished) {
+          try {
+            fs.unlinkSync(filepath);
+          } catch (err) {
 
+          }
         }
 
         res.statusCode = 500;
