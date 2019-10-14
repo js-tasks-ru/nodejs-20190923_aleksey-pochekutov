@@ -34,7 +34,11 @@ server.on('request', (req, res) => {
 
       limitStream.on('error', (err) => {
         file.destroy();
-        fs.unlinkSync(filepath);
+        try {
+          fs.unlinkSync(filepath);
+        } catch (err) {
+          console.log(err);
+        }
         res.statusCode = 413;
         res.end('Request Entity Too Larg');
       });
