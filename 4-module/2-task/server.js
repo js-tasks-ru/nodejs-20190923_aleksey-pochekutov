@@ -50,7 +50,11 @@ server.on('request', (req, res) => {
       });
 
       req.on('close', (err) => {
-        fs.unlinkSync(filepath);
+        try {
+          fs.unlinkSync(filepath);
+        } catch (err) {
+          console.log(err);
+        }
 
         res.statusCode = 500;
         res.end('Internal Server Error');
