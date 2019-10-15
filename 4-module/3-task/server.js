@@ -13,6 +13,11 @@ server.on('request', (req, res) => {
   switch (req.method) {
     case 'DELETE':
 
+      if (pathname.includes('/') || pathname.includes('..')) {
+        res.statusCode = 400;
+        res.end('Nested paths are not allowed');
+      }
+
       req.on('error', () => {
         res.statusCode = 500;
         res.end('internal error');
@@ -23,8 +28,13 @@ server.on('request', (req, res) => {
           res.statusCode = 200;
           res.end('OK');
         } else {
-          res.statusCode = 404;
-          res.end('file is not define');
+          if (err.code === 'ENOENT') {
+            res.statusCode = 404;
+            res.end('file is not define');
+          } else {
+            res.statusCode = 500;
+            res.end('internal error');
+          }
         }
       });
 
