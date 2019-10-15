@@ -1,6 +1,7 @@
 const url = require('url');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 
 const server = new http.Server();
 
@@ -11,6 +12,21 @@ server.on('request', (req, res) => {
 
   switch (req.method) {
     case 'DELETE':
+
+      req.on('error', () => {
+        res.statusCode = 500;
+        res.end('internal error');
+      });
+
+      fs.unlink(filepath, (err) => {
+        if (!err) {
+          res.statusCode = 200;
+          res.end('OK');
+        } else {
+          res.statusCode = 404;
+          res.end('file is not define');
+        }
+      });
 
       break;
 
