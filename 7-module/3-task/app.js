@@ -54,12 +54,10 @@ router.use(async (ctx, next) => {
 
   if (!token) return next();
 
-  if (token === 'not_existing_token') return ctx.throw(401, 'Неверный аутентификационный токен');
-
   try {
     const session = await Session.findOne({token}).populate('user');
 
-    if (!session) return ctx.throw(401, 'Unauthorized');
+    if (!session) return ctx.throw(401, 'Неверный аутентификационный токен');
 
     session.lastVisit = new Date();
     await session.save();
