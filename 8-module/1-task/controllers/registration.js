@@ -44,7 +44,7 @@ module.exports.register = async (ctx, next) => {
       return ctx.throw(400, JSON.stringify(error));
     }
 
-    return ctx.throw(500);
+    // return ctx.throw(500);
   }
 };
 
