@@ -11,17 +11,26 @@ module.exports.register = async (ctx, next) => {
 
   if (user) return ctx.throw(400, {errors: {email: 'Такой email уже существует'}});
 
-  const u = await User.create({
+  const verificationToken = uuid();
+
+  const newUser = new User({
     email,
     displayName,
-    verificationToken: uuid(),
+    verificationToken,
   });
-  await u.setPassword(password);
-  await u.save();
+
+  await newUser.setPassword(password);
+  //   const u = await User.create({
+  //     email,
+  //     displayName,
+  //     verificationToken: uuid(),
+  //   });
+  //   await u.setPassword(password);
+  await newUser.save();
 
   await sendMail({
     template: 'confirmation',
-    locals: {token: u.verificationToken},
+    locals: {token: verificationToken},
     to: email,
     subject: 'Подтвердите почту',
   });
