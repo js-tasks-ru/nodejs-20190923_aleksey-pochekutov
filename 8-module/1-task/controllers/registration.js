@@ -16,7 +16,7 @@ module.exports.register = async (ctx, next) => {
   const {email, displayName, password} = ctx.request.body;
   if (!email || !displayName || !password) return ctx.throw(400, 'Вы должны ввести все данные');
 
-  const user = await User.findOne({email: userData.email});
+  const user = await User.findOne({email});
 
   if (user) {
     return ctx.throw(400, {errors: {email: 'Такой email уже существует'}});
@@ -44,7 +44,7 @@ module.exports.register = async (ctx, next) => {
       return ctx.throw(400, JSON.stringify(error));
     }
 
-    // return ctx.throw(500);
+    return ctx.throw(500);
   }
 };
 
