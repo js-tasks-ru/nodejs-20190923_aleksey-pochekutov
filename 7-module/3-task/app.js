@@ -48,27 +48,18 @@ const router = new Router({prefix: '/api'});
 
 router.use(async (ctx, next) => {
   const header = ctx.request.get('Authorization');
-
   if (!header) return next();
-  const token = header.split(' ')[1];
 
+  const token = header.split(' ')[1];
   if (!token) return next();
 
-  if (token === 'not_existing_token') return ctx.throw(401, 'Неверный аутентификационный токен');
+  const session = await Session.findOne({token}).populate('user');
+  if (!session) return ctx.throw(401, 'Неверный аутентификационный токен');
 
-  try {
-    const session = await Session.findOne({token}).populate('user');
+  session.lastVisit = new Date();
+  await session.save();
 
-    if (!session) return ctx.throw(401, 'Unauthorized');
-
-    session.lastVisit = new Date();
-    await session.save();
-
-    ctx.user = session.user;
-  } catch (err) {
-    return ctx.throw(500);
-  }
-
+  ctx.user = session.user;
   return next();
 });
 
