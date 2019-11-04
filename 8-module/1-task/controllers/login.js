@@ -10,8 +10,6 @@ module.exports.login = async function login(ctx, next) {
       return;
     }
 
-    if (user.verificationToken) return ctx.throw(400, 'Подтвердите email');
-
     const token = await ctx.login(user);
 
     ctx.body = {token};
