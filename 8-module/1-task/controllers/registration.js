@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4');
 const User = require('../models/User');
-// const sendMail = require('../libs/sendMail');
+const sendMail = require('../libs/sendMail');
 
 function getErrors(errorObj) {
   const {errors} = errorObj;
@@ -24,6 +24,13 @@ module.exports.register = async (ctx, next) => {
     });
     await u.setPassword(password);
     await u.save();
+
+    await sendMail({
+      template: 'confirmation',
+      locals: {token: u.verificationToken},
+      to: 'alexeyerpd@gmail.com',
+      subject: 'Подтвердите почту',
+    });
     ctx.body = 'письмо отправлено на указанный email';
   } catch (err) {
     if (err.name === ' ValidationError') {
