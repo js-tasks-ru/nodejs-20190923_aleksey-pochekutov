@@ -33,7 +33,7 @@ module.exports.register = async (ctx, next) => {
     });
     ctx.body = 'письмо отправлено на указанный email';
   } catch (err) {
-    if (err.name === ' ValidationError') {
+    if (err.name === 'ValidationError') {
       const error = getErrors(err);
       return ctx.throw(400, JSON.stringify(error));
     }
