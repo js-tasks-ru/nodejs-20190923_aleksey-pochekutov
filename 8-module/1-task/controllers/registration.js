@@ -19,7 +19,7 @@ module.exports.register = async (ctx, next) => {
   const user = await User.findOne({email});
 
   if (user) {
-    return ctx.throw(400, JSON.stringify({errors: {email: 'Такой email уже существует'}}));
+    return ctx.throw(400, `{ errors: { email: 'Такой email уже существует' } }`);
   }
 
   try {
@@ -51,7 +51,9 @@ module.exports.register = async (ctx, next) => {
 module.exports.confirm = async (ctx, next) => {
   const {verificationToken} = ctx.request.body;
 
-  if (!verificationToken) return ctx.throw(400, 'Empty token');
+  if (!verificationToken) {
+    return ctx.throw(400, 'Ссылка подтверждения недействительна или устарела');
+  }
 
   const u = await User.findOne({verificationToken});
 
