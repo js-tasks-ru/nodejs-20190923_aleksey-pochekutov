@@ -28,14 +28,16 @@ module.exports.register = async (ctx, next) => {
     await sendMail({
       template: 'confirmation',
       locals: {token: u.verificationToken},
-      to: 'alexeyerpd@gmail.com',
+      to: email,
       subject: 'Подтвердите почту',
     });
-    ctx.body = 'письмо отправлено на указанный email';
+    ctx.body = {status: 'ok'};
   } catch (err) {
-    if (err.name === ' ValidationError') {
+    if (err.name === 'ValidationError') {
       const error = getErrors(err);
-      return ctx.throw(400, JSON.stringify(error));
+      ctx.status = 400;
+      ctx.body = error;
+      return;
     }
 
     return ctx.throw(500);
@@ -45,7 +47,9 @@ module.exports.register = async (ctx, next) => {
 module.exports.confirm = async (ctx, next) => {
   const {verificationToken} = ctx.request.body;
 
-  if (!verificationToken) return ctx.throw(400, 'Empty token');
+  if (!verificationToken) {
+    return ctx.throw(400, 'Ссылка подтверждения недействительна или устарела');
+  }
 
   const u = await User.findOne({verificationToken});
 
