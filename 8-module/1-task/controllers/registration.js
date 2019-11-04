@@ -20,7 +20,7 @@ module.exports.register = async (ctx, next) => {
 
   if (user) {
     ctx.status = 400;
-    ctx.body = `{ errors: { email: 'Такой email уже существует' } }`;
+    ctx.body = {errors: {email: 'Такой email уже существует'}};
     return;
     // return ctx.throw(400, `{ errors: { email: 'Такой email уже существует' } }`);
   }
