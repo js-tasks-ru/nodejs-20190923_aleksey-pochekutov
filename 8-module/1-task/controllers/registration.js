@@ -19,7 +19,7 @@ module.exports.register = async (ctx, next) => {
   const user = await User.findOne({email});
 
   if (user) {
-    return ctx.throw(400, {errors: {email: 'Такой email уже существует'}});
+    return ctx.throw(400, JSON.stringify({errors: {email: 'Такой email уже существует'}}));
   }
 
   try {
