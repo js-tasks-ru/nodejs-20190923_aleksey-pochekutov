@@ -16,15 +16,6 @@ module.exports.register = async (ctx, next) => {
   const {email, displayName, password} = ctx.request.body;
   if (!email || !displayName || !password) return ctx.throw(400, 'Вы должны ввести все данные');
 
-  const user = await User.findOne({email});
-
-  if (user) {
-    ctx.status = 400;
-    ctx.body = {errors: {email: 'Такой email уже существует'}};
-    return;
-    // return ctx.throw(400, `{ errors: { email: 'Такой email уже существует' } }`);
-  }
-
   try {
     const u = await User.create({
       email,
@@ -44,7 +35,9 @@ module.exports.register = async (ctx, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       const error = getErrors(err);
-      return ctx.throw(400, JSON.stringify(error));
+      ctx.status = 400;
+      ctx.body = error;
+      return;
     }
 
     return ctx.throw(500);
