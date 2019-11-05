@@ -8,6 +8,6 @@ const mapMessage = (m) => ({
 });
 
 module.exports.messageList = async function messages(ctx, next) {
-  const list = await Message.find().sort('1').limit(20);
+  const list = await Message.find({chat: ctx.user._id}).sort('-1').limit(20);
   ctx.body = {messages: list.map(mapMessage)};
 };
